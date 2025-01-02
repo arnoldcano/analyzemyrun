@@ -15,7 +15,7 @@ A fitness and running coach application that provides AI-powered insights and tr
 - Backend: Python/FastAPI
 - Frontend: React/TypeScript
 - Database: PostgreSQL
-- AI: SmolaGents
+- AI: Smolagents
 - Containerization: Docker & Docker Compose
 
 ## Setup
