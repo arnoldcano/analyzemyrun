@@ -67,7 +67,7 @@ const Dashboard: React.FC = () => {
   const [summary, setSummary] = useState<Summary | null>(null);
   const [trendData, setTrendData] = useState<TrendData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [periodDays, setPeriodDays] = useState(-1);
+  const [periodDays, setPeriodDays] = useState<number>(365);
   const [customDateRange, setCustomDateRange] = useState(false);
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
@@ -193,7 +193,7 @@ const Dashboard: React.FC = () => {
         {/* Time Period Selector */}
         <Grid item xs={12}>
           <Box display="flex" gap={2} alignItems="center">
-            <FormControl>
+            <FormControl fullWidth>
               <InputLabel>Time Period</InputLabel>
               <Select
                 value={periodDays}
@@ -207,12 +207,12 @@ const Dashboard: React.FC = () => {
                   }
                 }}
               >
-                <MenuItem value={-1}>All time</MenuItem>
-                <MenuItem value={7}>Last 7 days</MenuItem>
-                <MenuItem value={30}>Last 30 days</MenuItem>
-                <MenuItem value={90}>Last 90 days</MenuItem>
-                <MenuItem value={365}>Last year</MenuItem>
-                <MenuItem value={-2}>Custom range...</MenuItem>
+                <MenuItem value={7}>Last 7 Days</MenuItem>
+                <MenuItem value={30}>Last 30 Days</MenuItem>
+                <MenuItem value={90}>Last 90 Days</MenuItem>
+                <MenuItem value={365}>Last Year</MenuItem>
+                <MenuItem value={-1}>All Time</MenuItem>
+                <MenuItem value={-2}>Custom Range...</MenuItem>
               </Select>
             </FormControl>
             {customDateRange && startDate && endDate && (
@@ -251,6 +251,39 @@ const Dashboard: React.FC = () => {
             </Button>
           </DialogActions>
         </Dialog>
+
+        {/* Recent Achievements */}
+        <Grid item xs={12}>
+          <Paper sx={{ p: 2 }}>
+            <Box display="flex" alignItems="center" gap={1}>
+              <Typography variant="h6" gutterBottom>
+                Recent Achievements
+              </Typography>
+              <MuiTooltip title="Your most notable running accomplishments in the selected time period">
+                <InfoIcon fontSize="small" color="action" />
+              </MuiTooltip>
+            </Box>
+            <Grid container spacing={2}>
+              {summary.recent_achievements.map((achievement, index) => (
+                <Grid item xs={12} sm={6} md={4} key={index}>
+                  <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                    <CardContent>
+                      <Typography color="textSecondary" gutterBottom>
+                        {achievement.type}
+                      </Typography>
+                      <Typography variant="h5" component="div" sx={{ mb: 1.5 }}>
+                        {achievement.value}
+                      </Typography>
+                      <Typography variant="body2" color="textSecondary">
+                        {format(parseISO(achievement.date), 'MMM d, yyyy')}
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              ))}
+            </Grid>
+          </Paper>
+        </Grid>
 
         {/* Summary Stats */}
         <Grid item xs={12} md={3}>
@@ -467,32 +500,6 @@ const Dashboard: React.FC = () => {
                 </LineChart>
               </ResponsiveContainer>
             </Box>
-          </Paper>
-        </Grid>
-
-        {/* Recent Achievements */}
-        <Grid item xs={12}>
-          <Paper sx={{ p: 2 }}>
-            <Typography variant="h6" gutterBottom>
-              Recent Achievements
-            </Typography>
-            <Grid container spacing={2}>
-              {summary.recent_achievements.map((achievement, index) => (
-                <Grid item xs={12} sm={6} md={4} key={index}>
-                  <Card>
-                    <CardContent>
-                      <Typography color="textSecondary" gutterBottom>
-                        {achievement.type}
-                      </Typography>
-                      <Typography variant="h5">{achievement.value}</Typography>
-                      <Typography color="textSecondary">
-                        {format(parseISO(achievement.date), 'MMM d, yyyy')}
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                </Grid>
-              ))}
-            </Grid>
           </Paper>
         </Grid>
       </Grid>

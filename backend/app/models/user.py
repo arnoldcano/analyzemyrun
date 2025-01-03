@@ -18,6 +18,7 @@ class User(Base):
 
     # Relationships
     workouts = relationship("Workout", back_populates="user")
+    goals = relationship("Goal", back_populates="user")
 
     def verify_password(self, password: str) -> bool:
         return pwd_context.verify(password, self.hashed_password)
