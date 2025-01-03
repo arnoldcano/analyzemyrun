@@ -46,6 +46,14 @@ const Navigation: React.FC = () => {
             </Button>
             <Button
               component={RouterLink}
+              to="/runs"
+              color="inherit"
+              sx={{ fontWeight: isActive('/runs') ? 700 : 400 }}
+            >
+              Runs
+            </Button>
+            <Button
+              component={RouterLink}
               to="/import"
               color="inherit"
               sx={{ fontWeight: isActive('/import') ? 700 : 400 }}

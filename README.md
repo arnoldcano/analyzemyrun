@@ -6,7 +6,7 @@ A fitness and running coach application that provides AI-powered insights and tr
 
 - Import workout data from MapMyFitness API or CSV
 - Dashboard with workout analytics and progress tracking
-- AI-powered training plan generation using SmolaGents
+- AI-powered training plan generation using Smolagents
 - Goal setting and progress tracking
 - Personalized insights and recommendations
 

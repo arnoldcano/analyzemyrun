@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import SyncIcon from '@mui/icons-material/Sync';
+import api from '../services/api';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -37,6 +38,7 @@ const TabPanel = (props: TabPanelProps) => {
 const ImportRuns: React.FC = () => {
   const [tabValue, setTabValue] = useState(0);
   const [file, setFile] = useState<File | null>(null);
+  const [uploadStatus, setUploadStatus] = useState<{ type: 'success' | 'error', message: string } | null>(null);
   const [mapmyrunCredentials, setMapmyrunCredentials] = useState({
     username: '',
     password: '',
@@ -49,6 +51,7 @@ const ImportRuns: React.FC = () => {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       setFile(event.target.files[0]);
+      setUploadStatus(null);
     }
   };
 
@@ -61,7 +64,29 @@ const ImportRuns: React.FC = () => {
 
   const handleCsvUpload = async () => {
     if (!file) return;
-    // TODO: Implement CSV upload
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const response = await api.post('/workouts/upload-csv', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      setUploadStatus({
+        type: 'success',
+        message: `Successfully uploaded ${response.data.length} workouts`,
+      });
+      setFile(null);
+    } catch (error: any) {
+      console.error('Upload error:', error);
+      setUploadStatus({
+        type: 'error',
+        message: error.response?.data?.detail || 'Failed to upload file. Please try again.',
+      });
+    }
   };
 
   const handleMapmyrunSync = async () => {
@@ -112,6 +137,11 @@ const ImportRuns: React.FC = () => {
               >
                 Upload
               </Button>
+            </Box>
+          )}
+          {uploadStatus && (
+            <Box sx={{ mt: 2 }}>
+              <Alert severity={uploadStatus.type}>{uploadStatus.message}</Alert>
             </Box>
           )}
         </Box>
@@ -165,4 +195,4 @@ const ImportRuns: React.FC = () => {
   );
 };
 
-export default ImportRuns; 
+export default ImportRuns;
