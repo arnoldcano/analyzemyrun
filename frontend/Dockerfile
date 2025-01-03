@@ -5,14 +5,14 @@ WORKDIR /app
 # Copy package files
 COPY package*.json ./
 
-# Install dependencies with legacy peer deps to handle React 18 compatibility
-RUN npm install --legacy-peer-deps
+# Install dependencies and type declarations
+RUN npm install && \
+    npm install --save-dev @types/react @types/react-dom @types/react-router-dom && \
+    npm install @mui/material @emotion/react @emotion/styled && \
+    npm install axios
 
 # Copy the rest of the application
 COPY . .
 
-# Expose port 3000
-EXPOSE 3000
-
-# Start the app in development mode
+# Start the application
 CMD ["npm", "start"] 
